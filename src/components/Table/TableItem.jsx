@@ -24,7 +24,7 @@ const TableItem = ({
     } else {
       setChecked(false);
     }
-  }, [selectAll, selectedEmployees]);
+  }, [selectAll, selectedEmployees, selectedCompanies]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
