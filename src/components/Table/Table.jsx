@@ -25,6 +25,8 @@ const Table = ({
   const dispatch = useDispatch();
 
   const handleSelectAll = (e) => {
+    if (!data.length) return;
+
     const allCheckboxes = document
       .querySelector(`#${tableName}`)
       .getElementsByTagName("input");
@@ -80,11 +82,12 @@ const Table = ({
         setSelectedCompanies([]);
         break;
     }
+    setSelectAll(false);
   };
 
   return (
     <>
-      <div style={{ margin: "10px" }}>
+      <div className="button-group">
         <button onClick={() => setIsVisible((prev) => !prev)}>Add new</button>
         <button onClick={() => handleDelete(tableName)}>Delete</button>
       </div>

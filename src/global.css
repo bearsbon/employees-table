@@ -3,6 +3,19 @@ body {
   margin: 0;
 }
 
+button {
+  padding: 5px 7px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+  border-radius: 3px;
+  border: 1px solid #809274;
+}
+
+button:hover {
+  background-color: #91a98250;
+}
+
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;

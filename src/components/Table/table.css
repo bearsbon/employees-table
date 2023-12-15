@@ -25,6 +25,12 @@
   margin: 0px;
 }
 
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
 @media (max-width: 500px) {
   .container {
     flex-direction: column;
