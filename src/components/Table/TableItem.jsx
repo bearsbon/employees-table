@@ -24,7 +24,7 @@ const TableItem = ({
     } else {
       setChecked(false);
     }
-  }, [selectAll]);
+  }, [selectAll, selectedEmployees]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +54,7 @@ const TableItem = ({
             );
             setChecked(!checked);
           }}
-          checked={checked}
+          // checked={checked}
         />
       </td>
       <td onDoubleClick={() => setIsEditable(true)}>

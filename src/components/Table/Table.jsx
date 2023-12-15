@@ -44,9 +44,12 @@ const Table = ({
 
     if (selectAll === true && name === "employees") {
       setSelectedEmployees([]);
-    } else if (selectAll === true) {
+    } else if (selectAll === true && name === "companies") {
       dispatch(clearFilters());
       setSelectedCompanies([]);
+    } else if (selectAll === false && name === "employees") {
+      const employeeIds = data.map((el) => el.id);
+      setSelectedEmployees([...employeeIds]);
     } else {
       dispatch(setFilters(all));
     }
