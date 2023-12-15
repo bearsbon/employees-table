@@ -1,18 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "./components/Table/Table.jsx";
 import "./global.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllCompanies } from "./redux/slices/companySlice.js";
 import { fetchAllEmployees } from "./redux/slices/employeeSlice.js";
 
-const companiesTitles = ["name", "city", "amount"];
-const employeesTitles = ["name", "lastname", "position"];
-
 const App = () => {
   const dispatch = useDispatch();
   const { error, isLoading } = useSelector((state) => state.company);
   const companies = useSelector((state) => state.company.companies);
-  const employees = useSelector((state) => state.employee.employees);
+  const { filteredEmployees, employees, filters } = useSelector(
+    (state) => state.employee
+  );
+  const [selectAllCompanies, setSelectAllCompanies] = useState(false);
+  const [selectAllEmployees, setSelectAllEmployees] = useState(false);
+
+  const companiesTitles = ["name", "city", "amount"];
+  const employeesTitles = ["name", "lastname", "position"];
+
+  const isSelected = companies.some((el) => filters.includes(el.id));
 
   useEffect(() => {
     dispatch(fetchAllCompanies());
@@ -22,20 +28,32 @@ const App = () => {
   return (
     <>
       {error && <div> {error}</div>}
-      {isLoading ? (
+      {isLoading && employees.length ? (
         <div>Loading...</div>
       ) : (
         <div className="container">
-          <Table
-            tableName="companies"
-            data={companies}
-            titles={companiesTitles}
-          />
-          <Table
-            tableName="employees"
-            data={employees}
-            titles={employeesTitles}
-          />
+          <div>
+            <Table
+              tableName="companies"
+              employees={employees}
+              filteredEmployees={filteredEmployees}
+              data={companies}
+              titles={companiesTitles}
+              selectAll={selectAllCompanies}
+              setSelectAll={setSelectAllCompanies}
+            />
+          </div>
+          <div>
+            {isSelected || selectAllCompanies ? (
+              <Table
+                tableName="employees"
+                data={filteredEmployees}
+                titles={employeesTitles}
+                selectAll={selectAllEmployees}
+                setSelectAll={setSelectAllEmployees}
+              />
+            ) : null}
+          </div>
         </div>
       )}
     </>

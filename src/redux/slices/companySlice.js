@@ -32,7 +32,15 @@ export const companySlice = createSlice({
   initialState,
   reducers: {
     addCompany: (state, action) => {
-      state.companies.push(action.payload);
+      state.companies.push({
+        ...action.payload,
+        id: String(Math.random() + state.companies.length + 1),
+      });
+    },
+    deleteCompany: (state, action) => {
+      action.payload.forEach((item) => {
+        state.companies = state.companies.filter((el) => el.id !== item);
+      });
     },
   },
   extraReducers: (builder) => {
@@ -52,4 +60,5 @@ export const companySlice = createSlice({
   },
 });
 
+export const { addCompany, deleteCompany } = companySlice.actions;
 export default companySlice.reducer;

@@ -1,5 +1,5 @@
 .table {
-  width: 100%;
+  width: 500px;
   border-collapse: collapse;
 }
 
@@ -18,6 +18,11 @@
 
 .checked {
   background: #91a98250;
+}
+
+.input-td {
+  width: 100%;
+  margin: 0px;
 }
 
 @media (max-width: 500px) {

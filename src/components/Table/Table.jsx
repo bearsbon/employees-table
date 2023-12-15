@@ -1,64 +1,148 @@
 import React, { useEffect, useState } from "react";
 import "./table.css";
 import TableItem from "./TableItem.jsx";
+import { useDispatch } from "react-redux";
+import {
+  deleteEmployee,
+  setFilters,
+  clearFilters,
+} from "../../redux/slices/employeeSlice.js";
+import { deleteCompany } from "../../redux/slices/companySlice.js";
+import Modal from "../Modal/Modal.jsx";
 
-const Table = ({ data, titles, tableName }) => {
-  const [selectAll, setSelectAll] = useState(false);
-  const [items, setItems] = useState();
+const Table = ({
+  data,
+  employees,
+  titles,
+  tableName,
+  selectAll,
+  setSelectAll,
+}) => {
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    setItems(data.map((el) => (el = { ...el, checked: false })));
-  }, [data]);
+  const dispatch = useDispatch();
 
-  const handleSelectAll = () => {
-    setSelectAll((prev) => !prev);
-    const all = document
+  const handleSelectAll = (e) => {
+    const allCheckboxes = document
       .querySelector(`#${tableName}`)
       .getElementsByTagName("input");
-    for (let item of all) {
-      item.checked = !item.checked;
+    for (let item of allCheckboxes) {
+      !selectAll ? (item.checked = true) : (item.checked = false);
+    }
+
+    const all = data.map((el) => el.id);
+    const { name } = e.target;
+
+    setSelectAll(!selectAll);
+    name === "employees"
+      ? setSelectedEmployees(all)
+      : setSelectedCompanies(all);
+
+    if (selectAll === true && name === "employees") {
+      setSelectedEmployees([]);
+    } else if (selectAll === true) {
+      dispatch(clearFilters());
+      setSelectedCompanies([]);
+    } else {
+      dispatch(setFilters(all));
     }
   };
 
-  const handleCheckbox = (id) => {
-    const checkedItem = items.find((el) => el.id === id);
-    checkedItem.checked = !checkedItem.checked;
+  const handleSelect = (id, event, state) => {
+    let updatedList = [...state];
+    if (event.target.checked) {
+      updatedList = [...state, id];
+    } else {
+      updatedList.splice(state.indexOf(id), 1);
+      setSelectAll(false);
+    }
+
+    switch (state) {
+      case selectedCompanies:
+        setSelectedCompanies(updatedList);
+        dispatch(setFilters(updatedList));
+        break;
+      case selectedEmployees:
+        setSelectedEmployees(updatedList);
+        break;
+    }
+  };
+
+  const handleDelete = (type) => {
+    switch (type) {
+      case "employees":
+        dispatch(deleteEmployee(selectedEmployees));
+        break;
+      case "companies":
+        dispatch(deleteCompany(selectedCompanies));
+        setSelectedCompanies([]);
+        break;
+    }
   };
 
   return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th colSpan={5}>
-            <input
-              id={tableName + "_input"}
-              type="checkbox"
-              onChange={() => {
-                handleSelectAll();
-              }}
-            />
-            <label htmlFor={tableName + "_input"}>Выделить всё</label>
-          </th>
-        </tr>
-      </thead>
-      <tbody id={tableName}>
-        {items == null ? (
+    <>
+      <div style={{ margin: "10px" }}>
+        <button onClick={() => setIsVisible((prev) => !prev)}>Add new</button>
+        <button onClick={() => handleDelete(tableName)}>Delete</button>
+      </div>
+      <div>
+        {isVisible && <Modal setIsVisible={setIsVisible} title={tableName} />}
+      </div>
+      <table className="table">
+        <thead>
           <tr>
-            <td colSpan={5}>No companies</td>
+            <th colSpan={5}>
+              <input
+                id={tableName + "_input"}
+                type="checkbox"
+                checked={selectAll}
+                name={tableName}
+                onChange={(e) => {
+                  handleSelectAll(e);
+                }}
+              />
+              <label htmlFor={tableName + "_input"}>Выделить всё</label>
+            </th>
           </tr>
-        ) : (
-          items.map((el, index) => (
-            <TableItem
-              key={index}
-              checked2={el.checked}
-              item={el}
-              titles={titles}
-              handleCheckbox={handleCheckbox}
-            />
-          ))
-        )}
-      </tbody>
-    </table>
+          <tr>
+            <th />
+            {titles.map((el) => (
+              <th key={el}>{el}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody id={tableName}>
+          {data.length === 0 ? (
+            <tr>
+              <td colSpan={5}>No data</td>
+            </tr>
+          ) : (
+            data.map((el) => (
+              <TableItem
+                key={el.id}
+                item={el}
+                titles={titles}
+                tableName={tableName}
+                employeesAmount={
+                  tableName === "companies"
+                    ? employees.filter(
+                        (employee) => employee.companyId === el.id
+                      ).length
+                    : null
+                }
+                selectHandler={handleSelect}
+                selectAll={selectAll}
+                selectedCompanies={selectedCompanies}
+                selectedEmployees={selectedEmployees}
+              />
+            ))
+          )}
+        </tbody>
+      </table>
+    </>
   );
 };
 

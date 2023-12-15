@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   employees: [],
+  filteredEmployees: [],
+  filters: [],
   isLoading: null,
   error: null,
 };
@@ -30,7 +32,50 @@ export const fetchAllEmployees = createAsyncThunk(
 export const employeeSlice = createSlice({
   name: "employee",
   initialState,
-  reducers: {},
+  reducers: {
+    filterEmployees(state, action) {
+      if (action.payload) {
+        state.filteredEmployees = state.employees;
+        action.payload.forEach((item) => {
+          const filtered = state.employees.filter((el) => el.companyId == item);
+          state.filteredEmployees.concat(filtered);
+        });
+      } else {
+        state.filteredEmployees = state.employees;
+      }
+    },
+    addEmployee: (state, action) => {
+      state.filteredEmployees.push({
+        ...action.payload,
+        id: String(Math.random() + state.employees.length + 1),
+      });
+      state.employees.push({
+        ...action.payload,
+        id: String(Math.random() + state.employees.length + 1),
+      });
+    },
+    deleteEmployee: (state, action) => {
+      action.payload.forEach((item) => {
+        state.filteredEmployees = state.filteredEmployees.filter(
+          (el) => el.id !== item
+        );
+        state.employees = state.employees.filter((el) => el.id !== item);
+      });
+    },
+    setFilters: (state, action) => {
+      state.filters = [...action.payload];
+      if (state.filters.length === 0) {
+        state.filteredEmployees = state.employees;
+        return;
+      }
+      state.filteredEmployees = state.employees.filter((el) =>
+        state.filters.includes(el.companyId)
+      );
+    },
+    clearFilters: (state) => {
+      state.filters = [];
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAllEmployees.pending, (state) => {
       state.isLoading = true;
@@ -39,6 +84,7 @@ export const employeeSlice = createSlice({
     builder.addCase(fetchAllEmployees.fulfilled, (state, action) => {
       state.isLoading = false;
       state.employees = action.payload;
+      state.filteredEmployees = state.employees;
     });
     builder.addCase(fetchAllEmployees.rejected, (state) => {
       state.isLoading = false;
@@ -48,4 +94,11 @@ export const employeeSlice = createSlice({
   },
 });
 
+export const {
+  filterEmployees,
+  addEmployee,
+  deleteEmployee,
+  setFilters,
+  clearFilters,
+} = employeeSlice.actions;
 export default employeeSlice.reducer;
