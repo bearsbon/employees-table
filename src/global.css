@@ -1,0 +1,9 @@
+body {
+  padding: 50px 30px;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  gap: 50px;
+}
