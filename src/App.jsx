@@ -7,11 +7,13 @@ import { fetchAllEmployees } from "./redux/slices/employeeSlice.js";
 
 const App = () => {
   const dispatch = useDispatch();
+
   const { error, isLoading } = useSelector((state) => state.company);
   const companies = useSelector((state) => state.company.companies);
   const { filteredEmployees, employees, filters } = useSelector(
     (state) => state.employee
   );
+
   const [selectAllCompanies, setSelectAllCompanies] = useState(false);
   const [selectAllEmployees, setSelectAllEmployees] = useState(false);
 
@@ -24,6 +26,10 @@ const App = () => {
     dispatch(fetchAllCompanies());
     dispatch(fetchAllEmployees());
   }, [dispatch]);
+
+  useEffect(() => {
+    setSelectAllEmployees(false);
+  }, [isSelected]);
 
   return (
     <>

@@ -16,11 +16,10 @@ const TableItem = ({
   const isEmployeeTable = tableName === "employees";
 
   useEffect(() => {
-    if (
-      isEmployeeTable
-        ? selectedEmployees.includes(item.id)
-        : selectedCompanies.includes(item.id)
-    ) {
+    const condition = isEmployeeTable
+      ? selectedEmployees.includes(item.id)
+      : selectedCompanies.includes(item.id);
+    if (condition) {
       setChecked(true);
     } else {
       setChecked(false);
@@ -55,6 +54,7 @@ const TableItem = ({
             );
             setChecked(!checked);
           }}
+          checked={checked}
         />
       </td>
       <td onDoubleClick={() => setIsEditable(true)}>

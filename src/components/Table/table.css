@@ -30,38 +30,3 @@
   gap: 10px;
   margin-bottom: 5px;
 }
-
-@media (max-width: 500px) {
-  .container {
-    flex-direction: column;
-  }
-
-  .table thead {
-    display: none;
-  }
-
-  .table,
-  .table tbody,
-  .table tr,
-  .table td {
-    display: block;
-    width: 100%;
-  }
-  .table tr {
-    margin-bottom: 15px;
-  }
-  .table td {
-    padding-left: 50%;
-    text-align: left;
-    position: relative;
-  }
-  .table td::before {
-    position: absolute;
-    left: 0;
-    width: 50%;
-    padding-left: 15px;
-    font-size: 15px;
-    font-weight: bold;
-    text-align: left;
-  }
-}
