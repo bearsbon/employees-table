@@ -67,10 +67,9 @@ const Table = ({
     switch (state) {
       case selectedCompanies:
         const filteredData = employees
-          .filter((el) => el.companyId == id)
+          .filter((el) => updatedList.some((item) => item == el.companyId))
           .map((el) => el.id);
         setSelectedCompanies(updatedList);
-        setSelectedEmployees([...selectedEmployees, ...filteredData]);
         dispatch(setFilters(updatedList));
         break;
       case selectedEmployees:
