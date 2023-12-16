@@ -24,6 +24,10 @@ const Table = ({
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    setSelectAll(false);
+  }, [data]);
+
   const handleSelectAll = (e) => {
     if (!data.length) return;
 
@@ -66,9 +70,6 @@ const Table = ({
 
     switch (state) {
       case selectedCompanies:
-        const filteredData = employees
-          .filter((el) => updatedList.some((item) => item == el.companyId))
-          .map((el) => el.id);
         setSelectedCompanies(updatedList);
         dispatch(setFilters(updatedList));
         break;
