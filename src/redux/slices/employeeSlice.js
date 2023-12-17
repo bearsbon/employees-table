@@ -45,10 +45,6 @@ export const employeeSlice = createSlice({
       }
     },
     addEmployee: (state, action) => {
-      state.filteredEmployees.push({
-        ...action.payload,
-        id: String(Math.random() + state.employees.length + 1),
-      });
       state.employees.push({
         ...action.payload,
         id: String(Math.random() + state.employees.length + 1),

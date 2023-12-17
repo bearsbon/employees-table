@@ -17,9 +17,11 @@ const Table = ({
   tableName,
   selectAll,
   setSelectAll,
+  selectedCompanies,
+  setSelectedCompanies,
+  selectedEmployees,
+  setSelectedEmployees,
 }) => {
-  const [selectedCompanies, setSelectedCompanies] = useState([]);
-  const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
 
   const dispatch = useDispatch();
@@ -65,6 +67,15 @@ const Table = ({
       updatedList = [...state, id];
     } else {
       updatedList.splice(state.indexOf(id), 1);
+      let filtered;
+      tableName === "companies"
+        ? (filtered = employees
+            .filter((el) => updatedList.some((item) => item == el.companyId))
+            .map((el) => el.id))
+        : null;
+      console.log(updatedList);
+      console.log(filtered);
+      setSelectedEmployees(filtered);
       setSelectAll(false);
     }
 

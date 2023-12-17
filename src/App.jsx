@@ -16,6 +16,8 @@ const App = () => {
 
   const [selectAllCompanies, setSelectAllCompanies] = useState(false);
   const [selectAllEmployees, setSelectAllEmployees] = useState(false);
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
 
   const companiesTitles = ["name", "city", "amount"];
   const employeesTitles = ["name", "lastname", "position"];
@@ -42,11 +44,14 @@ const App = () => {
             <Table
               tableName="companies"
               employees={employees}
-              filteredEmployees={filteredEmployees}
               data={companies}
               titles={companiesTitles}
               selectAll={selectAllCompanies}
               setSelectAll={setSelectAllCompanies}
+              selectedCompanies={selectedCompanies}
+              setSelectedCompanies={setSelectedCompanies}
+              selectedEmployees={selectedEmployees}
+              setSelectedEmployees={setSelectedEmployees}
             />
           </div>
           <div>
@@ -57,6 +62,10 @@ const App = () => {
                 titles={employeesTitles}
                 selectAll={selectAllEmployees}
                 setSelectAll={setSelectAllEmployees}
+                selectedCompanies={selectedCompanies}
+                setSelectedCompanies={setSelectedCompanies}
+                selectedEmployees={selectedEmployees}
+                setSelectedEmployees={setSelectedEmployees}
               />
             ) : null}
           </div>
